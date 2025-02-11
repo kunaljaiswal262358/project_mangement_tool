@@ -9,6 +9,16 @@ export const getTask = async (req,res) => {
     }
 }
 
+export const getTaskByProjectId = async (req,res) => {
+    try {
+        const {projectId} = req.params;
+        const result = await Task.find({project: projectId}).populate("assignedTo");
+        res.status(200).json(result)
+    } catch(error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
 export const createTask = async (req, res) => {
     try {
         const {title, description, project, assignedTo, status, priority, deadline} = req.body;

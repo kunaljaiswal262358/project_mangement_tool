@@ -24,7 +24,7 @@ export const login = async (req, res) => {
 
     try {
         const {email, password} = req.body;
-        if(!email || !password) res.status(400).json({message: "All fields are required"})
+        if(!email || !password) return res.status(400).json({message: "All fields are required"})
 
         const user = await User.findOne({email})
         if(!user) return res.status(400).json({message: "User not found"})
@@ -51,3 +51,32 @@ const generateToken = (payload) => {
     return token
 }
 
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch(error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+
+export const profile = (req, res) => {
+    try {
+        const {token} = req.cookies
+        if(!token) return res.status(400).json({message: "There is no jwt"})
+        const user = jwt.verify(token,process.env.SECRET_KEY)
+        res.status(200).json(user)
+    } catch(error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+export const logout = (req, res) => {
+    try {
+        res.clearCookie("token")
+        res.status(200).json({message: "User logout successfully"})
+    } catch(error) {
+        res.status(500).json({message: error.message})
+    }
+}

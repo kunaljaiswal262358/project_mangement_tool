@@ -50,3 +50,14 @@ export const deleteProject = async (req, res) => {
         res.status(500).json({message: error.message})
     }
 }   
+
+export const getProjectById = async (req, res) => {
+    try {
+        const {projectId} = req.params
+        const project = await Project.findById(projectId);
+        res.status(200).json(project)
+    } catch(error) {
+        res.status(200).json({message: error.message})
+    }
+
+}
